@@ -1,9 +1,10 @@
 ﻿import tkinter as tk
-from tkinter import ttk, messagebox, simpledialog
+from tkinter import ttk, messagebox, simpledialog, filedialog
 import logging
 
 from planet_model import PlanetModel, PlanetValidationError
 from error_logger import ErrorLogger
+from command_processor import CommandProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -12,9 +13,10 @@ class PlanetApp:
     def __init__(self, root: tk.Tk, model: PlanetModel):
         self.root = root
         self.model = model
+        self.processor = CommandProcessor(model)
 
         self.root.title("Список планет")
-        self.root.geometry("700x550")
+        self.root.geometry("700x580")
         self.root.resizable(False, False)
 
         self.error_logger = ErrorLogger()
@@ -34,15 +36,15 @@ class PlanetApp:
         columns = ('name', 'type', 'radius', 'date')
         self.table = ttk.Treeview(frame, columns=columns, show='headings')
 
-        self.table.heading('name', text='Название')
-        self.table.heading('type', text='Тип')
+        self.table.heading('name',   text='Название')
+        self.table.heading('type',   text='Тип')
         self.table.heading('radius', text='Радиус (км)')
-        self.table.heading('date', text='Дата открытия')
+        self.table.heading('date',   text='Дата открытия')
 
-        self.table.column('name', width=130, anchor='center')
-        self.table.column('type', width=80, anchor='center')
+        self.table.column('name',   width=130, anchor='center')
+        self.table.column('type',   width=80,  anchor='center')
         self.table.column('radius', width=100, anchor='center')
-        self.table.column('date', width=130, anchor='center')
+        self.table.column('date',   width=130, anchor='center')
 
         self.table.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
@@ -55,6 +57,9 @@ class PlanetApp:
 
         tk.Button(frame, text="[ Удалить выбранную ]",
                   command=self._on_delete).pack(side=tk.LEFT, padx=5)
+
+        tk.Button(frame, text="[ Выполнить команды ]",
+                  command=self._on_run_commands).pack(side=tk.LEFT, padx=5)
 
     def _refresh_table(self) -> None:
         for row in self.table.get_children():
@@ -116,6 +121,19 @@ class PlanetApp:
         index = self.table.index(selected[0])
         self.model.delete_planet(index)
         self._refresh_table()
+
+    def _on_run_commands(self) -> None:
+        filename = filedialog.askopenfilename(
+            title="Выберите файл команд",
+            filetypes=[("Текстовые файлы", "*.txt"), ("Все файлы", "*.*")]
+        )
+        if not filename:
+            return
+
+        self.processor.run_file(filename)
+        self._refresh_table()
+        messagebox.showinfo(
+            "Готово")
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>Lab3_prog</Name>
     <RootNamespace>Lab3_prog</RootNamespace>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +26,7 @@
     <Compile Include="planet_model.py" />
     <Compile Include="test_planet_model.py" />
     <Compile Include="error_logger.py" />
+    <Compile Include="command_processor.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

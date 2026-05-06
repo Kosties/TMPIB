@@ -1,0 +1,5 @@
+ADD Нептун; planeta; 24622.0; 1846.09.23
+ADD Плутон; planeta; 1188.0; 1930.02.18
+ADD Сатурн; planeta; 58232.0; 1610.07.25
+REM radius < 2000
+SAVE result.txt
